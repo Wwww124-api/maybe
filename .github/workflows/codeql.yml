@@ -19,84 +19,81 @@ on:
   schedule:
     - cron: '19 17 * * 2'
 
-jobs:
-  analyze:
-    name: Analyze (${{ matrix.language }})
-    # Runner size impacts CodeQL analysis time. To learn more, please see:
-    #   - https://gh.io/recommended-hardware-resources-for-running-codeql
-    #   - https://gh.io/supported-runners-and-hardware-resources
-    #   - https://gh.io/using-larger-runners (GitHub.com only)
-    # Consider using larger runners or machines with greater resources for possible analysis time improvements.
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
-    permissions:
-      # required for all workflows
-      security-events: write
+งาน:
+วิเคราะห์:
+ชื่อ: วิเคราะห์ (${{ matrix.language }})
+# ขนาดของตัวรันเนอร์ส่งผลต่อเวลาในการวิเคราะห์ CodeQL หากต้องการเรียนรู้เพิ่มเติม โปรดดูที่:
+# - https://gh.io/recommended-hardware-resources-for-running-codeql
+# - https://gh.io/supported-runners-and-hardware-resources
+# - https://gh.io/using-larger-runners (เฉพาะ GitHub.com เท่านั้น)
+# พิจารณาใช้ตัวรันเนอร์ขนาดใหญ่กว่าหรือเครื่องจักรที่มีทรัพยากรมากขึ้นเพื่อปรับปรุงเวลาในการวิเคราะห์
+run-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+สิทธิ์:
+# จำเป็นสำหรับเวิร์กโฟลว์ทั้งหมด
+security-events: write
 
-      # required to fetch internal or private CodeQL packs
-      packages: read
+# จำเป็นสำหรับดึงชุด CodeQL ภายในหรือส่วนตัว
+แพ็กเกจ: read
 
-      # only required for workflows in private repositories
-      actions: read
-      contents: read
+# จำเป็นสำหรับเวิร์กโฟลว์ในที่เก็บข้อมูลส่วนตัวเท่านั้น
+actions: read
+contents: read
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-        - language: actions
-          build-mode: none
-        - language: javascript-typescript
-          build-mode: none
-        - language: ruby
-          build-mode: none
-        # CodeQL supports the following values keywords for 'language': 'actions', 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'swift'
-        # Use `c-cpp` to analyze code written in C, C++ or both
-        # Use 'java-kotlin' to analyze code written in Java, Kotlin or both
-        # Use 'javascript-typescript' to analyze code written in JavaScript, TypeScript or both
-        # To learn more about changing the languages that are analyzed or customizing the build mode for your analysis,
-        # see https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/customizing-your-advanced-setup-for-code-scanning.
-        # If you are analyzing a compiled language, you can modify the 'build-mode' for that language to customize how
-        # your codebase is analyzed, see https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/codeql-code-scanning-for-compiled-languages
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+strategy:
+fail-fast: false
+matrix:
+include:
+- language: actions
+build-mode: none
+- language: javascript-typescript
+build-mode: none
+- language: ruby
+build-mode: none
+# CodeQL รองรับค่าต่อไปนี้ คีย์เวิร์ดสำหรับ 'language': 'actions', 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'swift'
+# ใช้ `c-cpp` เพื่อวิเคราะห์โค้ดที่เขียนใน C, C++ หรือทั้งสองอย่าง
+# ใช้ 'java-kotlin' เพื่อวิเคราะห์โค้ดที่เขียนด้วย Java, Kotlin หรือทั้งสองอย่าง
+# ใช้ 'javascript-typescript' เพื่อวิเคราะห์โค้ดที่เขียนด้วย JavaScript, TypeScript หรือทั้งสองอย่าง
+# หากต้องการเรียนรู้เพิ่มเติมเกี่ยวกับการเปลี่ยนแปลงภาษาที่วิเคราะห์หรือการปรับแต่งโหมดการสร้างสำหรับการวิเคราะห์ของคุณ
+# ดู https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/customizing-your-advanced-setup-for-code-scanning # หากคุณกำลังวิเคราะห์ภาษาที่คอมไพล์แล้ว คุณสามารถปรับเปลี่ยน 'โหมดการสร้าง' สำหรับภาษานั้นเพื่อปรับแต่งวิธีการวิเคราะห์
+# ฐานโค้ดของคุณ โปรดดู https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/codeql-code-scanning-for-compiled-languages
+ขั้นตอน:
+- ชื่อ: คลังเก็บข้อมูล Checkout
+ใช้: actions/checkout@v4
 
-    # Add any setup steps before running the `github/codeql-action/init` action.
-    # This includes steps like installing compilers or runtimes (`actions/setup-node`
-    # or others). This is typically only required for manual builds.
-    # - name: Setup runtime (example)
-    #   uses: actions/setup-example@v1
+# เพิ่มขั้นตอนการตั้งค่าใดๆ ก่อนเรียกใช้การดำเนินการ `github/codeql-action/init`
+# ซึ่งรวมถึงขั้นตอนต่างๆ เช่น การติดตั้งคอมไพเลอร์หรือรันไทม์ (`actions/setup-node`
+# หรืออื่นๆ) โดยปกติแล้วขั้นตอนนี้จำเป็นสำหรับการสร้างด้วยตนเองเท่านั้น
+# - ชื่อ: ตั้งค่ารันไทม์ (ตัวอย่าง)
+# ใช้: actions/setup-example@v1
 
-    # Initializes the CodeQL tools for scanning.
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
-      with:
-        languages: ${{ matrix.language }}
-        build-mode: ${{ matrix.build-mode }}
-        # If you wish to specify custom queries, you can do so here or in a config file.
-        # By default, queries listed here will override any specified in a config file.
-        # Prefix the list here with "+" to use these queries and those in the config file.
+# เริ่มต้นเครื่องมือ CodeQL สำหรับการสแกน - ชื่อ: เริ่มต้น CodeQL
+ใช้: github/codeql-action/init@v3
+ด้วย:
+ภาษา: ${{ matrix.language }}
+โหมดสร้าง: ${{ matrix.build-mode }}
+# หากคุณต้องการระบุแบบสอบถามที่กำหนดเอง คุณสามารถทำได้ที่นี่หรือในไฟล์การกำหนดค่า
+# โดยค่าเริ่มต้น แบบสอบถามที่แสดงที่นี่จะแทนที่แบบสอบถามใดๆ ที่ระบุไว้ในไฟล์การกำหนดค่า
+# เพิ่มคำนำหน้ารายการที่นี่ด้วย "+" เพื่อใช้แบบสอบถามเหล่านี้และแบบสอบถามในไฟล์การกำหนดค่า
+# สำหรับรายละเอียดเพิ่มเติมเกี่ยวกับชุดคำสั่งค้นหาของ CodeQL โปรดดูที่: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
+# คำสั่งค้นหา: security-extended,security-and-quality
 
-        # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
-        # queries: security-extended,security-and-quality
+# หากขั้นตอนการวิเคราะห์ล้มเหลวสำหรับภาษาใดภาษาหนึ่งที่คุณกำลังวิเคราะห์
+# "เราไม่สามารถสร้างโค้ดของคุณโดยอัตโนมัติได้" ให้แก้ไขเมทริกซ์ด้านบน
+# เพื่อตั้งค่าโหมดการสร้างเป็น "ด้วยตนเอง" สำหรับภาษานั้น จากนั้นแก้ไขขั้นตอนนี้
+# เพื่อสร้างโค้ดของคุณ
+# ℹ️ โปรแกรมบรรทัดคำสั่งที่จะเรียกใช้โดยใช้เชลล์ของระบบปฏิบัติการ # 📚 ดู https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
+- if: matrix.build-mode == 'manual'
+shell: bash
+run: |
+echo 'หากคุณกำลังใช้โหมดสร้าง "ด้วยตนเอง" สำหรับภาษาใดภาษาหนึ่งหรือมากกว่านั้น' \
+'ภาษาที่คุณกำลังวิเคราะห์ ให้แทนที่ด้วยคำสั่งที่จะสร้าง' \
+'ตัวอย่างเช่นรหัสของคุณ:'
+echo ' make bootstrap'
+echo ' make release'
+exit 1
 
-    # If the analyze step fails for one of the languages you are analyzing with
-    # "We were unable to automatically build your code", modify the matrix above
-    # to set the build mode to "manual" for that language. Then modify this step
-    # to build your code.
-    # ℹ️ Command-line programs to run using the OS shell.
-    # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
-    - if: matrix.build-mode == 'manual'
-      shell: bash
-      run: |
-        echo 'If you are using a "manual" build mode for one or more of the' \
-          'languages you are analyzing, replace this with the commands to build' \
-          'your code, for example:'
-        echo '  make bootstrap'
-        echo '  make release'
-        exit 1
+- name: ดำเนินการวิเคราะห์ CodeQL
+ใช้: github/codeql-action/analyze@v3
+ด้วย: ผู้ช่วยนักบิน_>ระบบ[#@]_>ประมวลข้อผิดผลาด=แก้ไข้//=รันwwww124-api@users.noreply.github.com
+category: "/language:${{matrix.language}}"
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
-      with:
-        category: "/language:${{matrix.language}}"
